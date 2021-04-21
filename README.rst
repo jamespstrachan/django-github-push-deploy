@@ -10,14 +10,21 @@ Quick start
 
 1. Add "django_github_push_deploy" to your INSTALLED_APPS setting like this::
 
-    INSTALLED_APPS = [
-        ...
-        'django_github_push_deploy',
-    ]
+````
+INSTALLED_APPS = [
+    ...
+    'django_github_push_deploy',
+]
+````
+2. Include the deploy URL in your project urls.py like the following. You can (should?) change the url
+   stem to one of your choosing. The deploy endpoint will be 'yoursite.com/[URL_STEM]/deploy'
 
-2. Include the polls URLconf in your project urls.py like this:
-
-    path('django-github-push-deploy/', include('django_github_push_deploy.urls')),
+````
+urlpatterns = [
+  ...,
+  url('[URL_STEM]/', include('django_github_push_deploy.urls')),
+]
+````
 
 3. Add GITHUB_DEPLOY_KEY and DEPLOY_SCRIPT_PATH (relative to BASE_DIR) to your project settings like this:
 
@@ -29,3 +36,5 @@ Quick start
 
 5. DEPLOY_COMMAND can be set to "just say it worked" to return a 200 if we get to the script-running step (useful
    for checking initial Github setup, but nothing will happen if you leave it in this state)
+
+6.
