@@ -28,8 +28,11 @@ def deploy(request):
             return HttpResponseForbidden('Github deploy webhook received with invalid signature header')
 
     if DEPLOY_COMMAND == "just say it worked":
-        return HttpResponse('DEPLOY_COMMAND is set to "just say it worked", so we\'re just saying that it worked', status=http.client.ACCEPTED)
+        return HttpResponse('DEPLOY_COMMAND is set to "just say it worked", '+
+                            'so we\'re just saying that it worked instead of running `{}`'.format(DEPLOY_COMMAND),
+                            status=http.client.ACCEPTED)
 
-    if subprocess.run(DEPLOY_COMMAND.split(" "), timeout=15).returncode == 0:
+    result = subprocess.run(DEPLOY_COMMAND.split(" "), cwd="/var/www/staging", timeout=15, capture_output=True)
+    if result.returncode == 0:
         return HttpResponse('Github deploy webhook received, deploy script run', status=http.client.ACCEPTED)
-    raise Http404("Github deploy webhook received but deploy command returned non-zero code")
+    raise Http404("Github deploy webhook received but deploy command returned non-zero code \n\n"+ str(result.stdout) + str(result.stderr))
